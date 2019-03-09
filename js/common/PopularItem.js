@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default class PopularItem extends Component{

@@ -1,7 +1,5 @@
 import {
     createStackNavigator,
-    createMaterialTopTabNavigator,
-    createBottomTabNavigator,
     createSwitchNavigator} from 'react-navigation';
 import WelcomePage from '../page/WelcomePage';
 import HomePage from '../page/HomePage';
