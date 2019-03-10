@@ -1,4 +1,7 @@
 import {AsyncStorage} from 'react-native';
+import Trending from 'GitHubTrending';
+
+export const FLAG_STORAGE = {flag_popular: 'popular', flag_trending: 'trending'};
 
 export default class DataStore {
 
@@ -8,13 +11,13 @@ export default class DataStore {
      * @param flag
      * @returns {Promise}
      */
-    fetchData(url) {
+    fetchData(url, flag) {
         return new Promise((resolve, reject) => {
             this.fetchLocalData(url).then((wrapData) => {
                 if (wrapData && DataStore.checkTimestampValid(wrapData.timestamp)) {
                     resolve(wrapData);
                 } else {
-                    this.fetchNetData(url).then((data) => {
+                    this.fetchNetData(url, flag).then((data) => {
                         resolve(this._wrapData(data));
                     }).catch((error) => {
                         reject(error);
@@ -22,7 +25,7 @@ export default class DataStore {
                 }
 
             }).catch((error) => {
-                this.fetchNetData(url).then((data) => {
+                this.fetchNetData(url, flag).then((data) => {
                     resolve(this._wrapData(data));
                 }).catch((error => {
                     reject(error);
@@ -30,8 +33,9 @@ export default class DataStore {
             })
         })
     }
+
     /**
-     *  保存数据
+     * 保存数据
      * @param url
      * @param data
      * @param callback
@@ -41,20 +45,13 @@ export default class DataStore {
         AsyncStorage.setItem(url, JSON.stringify(this._wrapData(data)), callback);
     }
 
-    _wrapData(data) {
-        return {
-            data: data,
-            timestamp: new Date().getTime()
-        };
-    }
-
     /**
-     *  获取本地数据
+     * 获取本地数据
      * @param url
-     * @returns {Promise<any> | Promise}
+     * @returns {Promise}
      */
     fetchLocalData(url) {
-        return new Promise(((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             AsyncStorage.getItem(url, (error, result) => {
                 if (!error) {
                     try {
@@ -68,7 +65,7 @@ export default class DataStore {
                     console.error(error);
                 }
             })
-        }))
+        })
     }
 
     /**
@@ -79,22 +76,39 @@ export default class DataStore {
      */
     fetchNetData(url, flag) {
         return new Promise((resolve, reject) => {
-            fetch(url)
-                .then((response) => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error('Network response was not ok.');
-                })
-                .then((responseData) => {
-                    this.saveData(url, responseData);
-                    resolve(responseData);
-                })
-                .catch((error) => {
-                    reject(error);
-                })
-
+            if (flag !== FLAG_STORAGE.flag_trending) {
+                fetch(url)
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then((responseData) => {
+                        this.saveData(url, responseData)
+                        resolve(responseData);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    })
+            } else {
+                new Trending().fetchTrending(url)
+                    .then(items => {
+                        if (!items) {
+                            throw new Error('responseData is null');
+                        }
+                        this.saveData(url, items);
+                        resolve(items);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    })
+            }
         })
+    }
+
+    _wrapData(data) {
+        return {data: data, timestamp: new Date().getTime()};
     }
 
     /**
