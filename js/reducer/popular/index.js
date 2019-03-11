@@ -26,7 +26,7 @@ export default function onAction(state = defaultState, action) {
                 [action.storeName]: {
                     ...state[action.storeName],
                     items: action.items,//原始数据
-                    projectModes: action.projectModes,//此次要展示的数据
+                    projectModels: action.projectModels,//此次要展示的数据
                     isLoading: false,
                     hideLoadingMore: false,
                     pageIndex: action.pageIndex
@@ -54,7 +54,7 @@ export default function onAction(state = defaultState, action) {
                 ...state,//Object.assign @http://www.devio.org/2018/09/09/ES6-ES7-ES8-Feature/
                 [action.storeName]: {
                     ...state[action.storeName],
-                    projectModes: action.projectModes,
+                    projectModels: action.projectModels,
                     hideLoadingMore: false,
                     pageIndex: action.pageIndex,
                 }

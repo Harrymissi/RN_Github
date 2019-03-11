@@ -2,28 +2,24 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import NavigationUtil from "../navigator/NavigationUtil";
+import BaseItem from "./BaseItem";
+import {FLAG_STORAGE} from "../expand/dao/DataStore";
 
-export default class PopularItem extends Component{
-    onItemClick(item) {
-        NavigationUtil.goPage({
-            projectModel: item,
-        }, 'DetailPage');
-    }
+export default class PopularItem extends BaseItem{
+    // onItemClick(item) {
+    //     NavigationUtil.goPage({
+    //         projectModel: item,
+    //         flag: FLAG_STORAGE.flag_popular,
+    //         callback
+    //     }, 'DetailPage');
+    // }
     render() {
-        const {item} = this.props;
+        const {projectModel} = this.props;
+        const {item} = projectModel;
         if (!item || !item.owner) return null;
-        let favoriteButton = <TouchableOpacity
-            style={{padding:6}}
-            onPress={() => {}}
-            underlayColor={'transparent'}>
-            <FontAwesome
-                name={'star-o'}
-                size={26}
-                style={{color: 'red'}}/>
-        </TouchableOpacity>;
         return (
             <TouchableOpacity
-                onPress={()=>this.onItemClick(item)}
+                // onPress={()=>this.onItemClick(projectModel)}
             >
                 <View style={styles.cell_container}>
                     <Text style={styles.title}>
@@ -43,7 +39,7 @@ export default class PopularItem extends Component{
                             <Text>Start:</Text>
                             <Text>{item.stargazers_count}</Text>
                         </View>
-                        {favoriteButton}
+                        {this._favoriteIcon()}
                     </View>
                 </View>
             </TouchableOpacity>

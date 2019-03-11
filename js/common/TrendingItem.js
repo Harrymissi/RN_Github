@@ -3,25 +3,20 @@ import {StyleSheet, Text, View, TouchableOpacity, Image, DeviceInfo} from 'react
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HTMLVIEW from 'react-native-htmlview';
 import NavigationUtil from "../navigator/NavigationUtil";
+import BaseItem from "./BaseItem";
+import {FLAG_STORAGE} from "../expand/dao/DataStore";
 
-export default class TrendingItem extends Component{
+export default class TrendingItem extends BaseItem{
     onItemClick(item) {
         NavigationUtil.goPage({
             projectModel: item,
+            flag: FLAG_STORAGE.flag_trending
         }, 'DetailPage')
     }
     render() {
-        const {item} = this.props;
+        const {projectModel} = this.props;
+        const {item} = projectModel;
         if (!item) return null;
-        let favoriteButton = <TouchableOpacity
-            style={{padding:6}}
-            onPress={() => {}}
-            underlayColor={'transparent'}>
-            <FontAwesome
-                name={'star-o'}
-                size={26}
-                style={{color: 'red'}}/>
-        </TouchableOpacity>;
         let description = '<p>' + item.description + '</p>';
         return (
             <TouchableOpacity
@@ -58,7 +53,7 @@ export default class TrendingItem extends Component{
                             <Text>Start:</Text>
                             <Text>{item.starCount}</Text>
                         </View>
-                        {favoriteButton}
+                        {this._favoriteIcon()}
                     </View>
                 </View>
             </TouchableOpacity>
