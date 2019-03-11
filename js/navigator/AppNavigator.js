@@ -31,7 +31,7 @@ const MainNavigator = createStackNavigator({
     DetailPage: {
         screen: DetailPage,
         navigationOptions: {
-            //header: null  // 可以将header设为null， 来禁用StackNavigation Bar
+            header: null  // 可以将header设为null， 来禁用StackNavigation Bar
         }
     },
     FetchDemoPage: {

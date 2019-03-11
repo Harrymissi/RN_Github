@@ -2,8 +2,14 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Image, DeviceInfo} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HTMLVIEW from 'react-native-htmlview';
+import NavigationUtil from "../navigator/NavigationUtil";
 
 export default class TrendingItem extends Component{
+    onItemClick(item) {
+        NavigationUtil.goPage({
+            projectModel: item,
+        }, 'DetailPage')
+    }
     render() {
         const {item} = this.props;
         if (!item) return null;
@@ -19,7 +25,7 @@ export default class TrendingItem extends Component{
         let description = '<p>' + item.description + '</p>';
         return (
             <TouchableOpacity
-                onPress={()=>this.onItemClick()}
+                onPress={()=>this.onItemClick(item)}
             >
                 <View style={styles.cell_container}>
                     <Text style={styles.title}>
